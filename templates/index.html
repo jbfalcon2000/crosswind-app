@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Left Section -->
+    <div class="section">
+        <h2>Wind Information</h2>
+        <p><strong>Wind Direction:</strong> {{ wind_direction }}°</p>
+        <p><strong>Wind Speed:</strong> {{ wind_speed }} Knots</p>
+        <p><strong>Runway Direction:</strong> RWY {{ runway_direction // 10 }}</p>
+        <img src="{{ url_for('static', filename='runway.png') }}" alt="Runway" style="width:100%;">
+    </div>
+
+    <!-- Right Section -->
+    <div class="section">
+        <h2>Your Task</h2>
+        <form method="POST">
+            <input type="hidden" name="wind_direction" value="{{ wind_direction }}">
+            <input type="hidden" name="wind_speed" value="{{ wind_speed }}">
+            <input type="hidden" name="runway_direction" value="{{ runway_direction }}">
+
+            <label for="choice">Wind Direction:</label>
+            <div>
+                <button
+                    type="button"
+                    class="button choice {% if user_choice == 'Left' %}selected{% endif %} {% if correct_choice == 'Left' and result %}correct{% endif %} {% if user_choice == 'Left' and correct_choice != 'Left' and result == 'Incorrect' %}incorrect{% endif %}"
+                    data-choice="Left">
+                    Left
+                </button>
+                <button
+                    type="button"
+                    class="button choice {% if user_choice == 'Right' %}selected{% endif %} {% if correct_choice == 'Right' and result %}correct{% endif %} {% if user_choice == 'Right' and correct_choice != 'Right' and result == 'Incorrect' %}incorrect{% endif %}"
+                    data-choice="Right">
+                    Right
+                </button>
+                <input type="hidden" name="choice" id="choice">
+            </div>
+
+            <label for="crosswind">Crosswind Component (Knots):</label>
+            <input
+                type="number"
+                id="crosswind"
+                name="crosswind"
+                min="0"
+                max="30"
+                step="0.1"
+                required
+                value="{{ user_crosswind if user_crosswind is not none else '' }}">
+
+            <div style="margin-top: 20px;">
+                <button type="submit" class="button" id="submit-btn" {% if allow_next %}disabled{% endif %}>Submit</button>
+                {% if allow_next %}
+                <button type="submit" name="next" class="button">Next</button>
+                {% endif %}
+            </div>
+        </form>
+
+        {% if result %}
+        <p class="result">{{ result }}</p>
+        <p>{{ feedback }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    const choiceButtons = document.querySelectorAll(".choice");
+    const choiceInput = document.getElementById("choice");
+    const crosswindInput = document.getElementById("crosswind");
+    const submitBtn = document.getElementById("submit-btn");
+
+    choiceButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            choiceInput.value = button.dataset.choice;
+            choiceButtons.forEach(btn => btn.classList.remove("selected"));
+            button.classList.add("selected");
+            checkInputs();
+        });
+    });
+
+    crosswindInput.addEventListener("input", checkInputs);
+
+    function checkInputs() {
+        if (choiceInput.value && crosswindInput.value) {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
+        }
+    }
+</script>
+{% endblock %}
