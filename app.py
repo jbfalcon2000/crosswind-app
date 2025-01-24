@@ -28,15 +28,35 @@ def determine_crosswind_direction(wind_direction, runway_direction):
         return "Left"
 
 
+def generate_scenario():
+    """
+    Generates a random wind direction, wind speed, and runway direction.
+    Ensures the runway direction is neither the same as the wind direction
+    nor directly opposite to it.
+    
+    Returns:
+        tuple: (wind_direction, wind_speed, runway_direction)
+    """
+    wind_direction = random.randint(0, 35) * 10  # Rounded to nearest 10°
+    wind_speed = random.randint(0, 30)  # Knots
+
+    while True:
+        runway_direction = random.randint(0, 35) * 10
+        # Ensure runway_direction is not the same as wind_direction or 180° opposite
+        if runway_direction != wind_direction and runway_direction != (wind_direction + 180) % 360:
+            break  # Valid runway_direction found
+
+    return wind_direction, wind_speed, runway_direction
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     global score
 
     if request.method == "GET":
         # Generate a new scenario
-        wind_direction = random.randint(0, 35) * 10  # Rounded to nearest 10°
-        wind_speed = random.randint(0, 30)  # Knots
-        runway_direction = random.randint(0, 35) * 10
+        wind_direction, wind_speed, runway_direction = generate_scenario()
+        
         return render_template(
             "index.html",
             wind_direction=wind_direction,
@@ -53,9 +73,29 @@ def index():
 
     if "next" in request.form:
         # Generate a new scenario
-        wind_direction = random.randint(0, 35) * 10
-        wind_speed = random.randint(0, 30)
-        runway_direction = random.randint(0, 35) * 10
+        wind_direction, wind_speed, runway_direction = generate_scenario()
+        
+        return render_template(
+            "index.html",
+            wind_direction=wind_direction,
+            wind_speed=wind_speed,
+            runway_direction=runway_direction,
+            score=score,
+            result=None,
+            feedback=None,
+            user_choice=None,
+            correct_choice=None,
+            user_crosswind=None,
+            allow_next=False,
+        )
+    
+    if "restart" in request.form:
+        # Reset the score
+        score["correct"] = 0
+        score["attempts"] = 0
+        # Generate a new scenario
+        wind_direction, wind_speed, runway_direction = generate_scenario()
+
         return render_template(
             "index.html",
             wind_direction=wind_direction,
@@ -106,7 +146,7 @@ def index():
             runway_direction=runway_direction,
             score=score,
             result=result,
-            feedback=" ".join(feedback) if feedback else "You got everything correct!",
+            feedback="\n".join(feedback) if feedback else f"You got everything correct! Correct crosswind was {correct_crosswind}",
             user_choice=user_choice,
             correct_choice=correct_choice,
             user_crosswind=user_crosswind,
