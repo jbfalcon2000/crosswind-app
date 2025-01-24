@@ -1,35 +1,54 @@
 /* Style the slider track */
 input[type="range"] {
-    -webkit-appearance: none; /* Remove default slider styling for WebKit browsers */
-    appearance: none; /* Remove default slider styling */
+    -webkit-appearance: none; /* Remove default styles for WebKit browsers */
+    appearance: none; /* Remove default styles for modern browsers */
     width: 100%; /* Full-width slider */
-    height: 40px; /* Increase track height for better touch interaction */
-    background: linear-gradient(90deg, green, gray); /* Initial gradient */
-    border-radius: 20px; /* Rounded corners for a modern look */
+    height: 40px; /* Adjust the track height */
+    background: linear-gradient(90deg, green, gray); /* Default gradient */
+    border-radius: 20px; /* Make the bar rounded */
     outline: none; /* Remove focus outline */
     transition: background 0.3s ease-in-out; /* Smooth gradient transition */
-    padding: 0; /* Remove default padding */
-    touch-action: none; /* Enable smooth touch sliding */
-    cursor: pointer; /* Indicate that it's interactive */
-    overflow: hidden; /* Ensure gradient stays within bounds */
+    touch-action: pan-x; /* Enable horizontal dragging on touch screens */
+    cursor: pointer; /* Pointer cursor for usability */
+    overflow: hidden; /* Prevent overflow */
 }
 
 /* Remove the slider thumb for WebKit browsers */
 input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Disable thumb appearance */
+    -webkit-appearance: none;
     appearance: none;
-    width: 0; /* Completely hide thumb */
+    width: 0; /* Remove thumb */
     height: 0;
 }
 
 /* Remove the slider thumb for Firefox */
 input[type="range"]::-moz-range-thumb {
-    width: 0; /* Completely hide thumb */
+    width: 0; /* Remove thumb */
     height: 0;
 }
 
-/* Remove the slider thumb for Internet Explorer/Edge */
+/* Remove the slider thumb for Internet Explorer / Edge */
 input[type="range"]::-ms-thumb {
-    width: 0; /* Completely hide thumb */
+    width: 0; /* Remove thumb */
     height: 0;
+}
+
+/* Style the track for WebKit browsers */
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 40px; /* Adjust track height to match */
+    background: transparent; /* Background is inherited from the parent input */
+}
+
+/* Style the track for Firefox */
+input[type="range"]::-moz-range-track {
+    height: 40px; /* Adjust track height */
+    background: transparent; /* Background is inherited from the parent input */
+}
+
+/* Style the track for Internet Explorer / Edge */
+input[type="range"]::-ms-track {
+    height: 40px; /* Adjust track height */
+    background: transparent; /* Background is inherited from the parent input */
+    border-color: transparent; /* Remove default border */
+    color: transparent; /* Remove default text */
 }
