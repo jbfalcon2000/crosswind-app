@@ -94,22 +94,12 @@
             color: white;
         }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .result {
-            font-size: 20px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
-    <div class="score">
-        Score: {{ score.correct }}/{{ score.attempts }}
-    </div>
+
     {% block content %}{% endblock %}
+
+
 </body>
 </html>

@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
+{% block title %}Crosswind Game{% endblock %}
+
 {% block content %}
 <div class="container" style="display: flex; flex-direction: column; align-items: center; padding: 10px; width: 100%;">
+
+    <!-- Score -->
+    <div class="score">
+        Score: {{ score.correct }}/{{ score.attempts }}
+    </div>
 
     <!-- Wind Information -->
     <div style="text-align: center; margin-bottom: 20px;">
@@ -16,6 +23,7 @@
         <input type="hidden" name="wind_direction" value="{{ wind_direction }}">
         <input type="hidden" name="wind_speed" value="{{ wind_speed }}">
         <input type="hidden" name="runway_direction" value="{{ runway_direction }}">
+        <input type="hidden" name="choice" id="choice">
         <!-- Left and Right Buttons -->
         <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
             <button
@@ -30,7 +38,6 @@
                 data-choice="Right">
                 Right
             </button>
-            <input type="hidden" name="choice" id="choice">
         </div>
 
         <!-- Crosswind Slider -->
@@ -44,7 +51,6 @@
                 max="30"
                 step="0.5"
                 value="{{ user_crosswind if user_crosswind is not none else 0 }}"
-                oninput="updateSliderStyle(this)"
                 style="width: 100%;"
             >
             <div style="text-align: center; margin-top: 10px;">
@@ -62,7 +68,6 @@
     </form>
     <!-- Form ends here -->
 
-
     <!-- Restart Button -->
     <div style="position: fixed; bottom: 20px; right: 20px;">
         <form method="POST">
@@ -75,84 +80,23 @@
     <p>{{ feedback }}</p>
     {% endif %}
 </div>
+{% endblock %}
 
-<script>
-    const choiceButtons = document.querySelectorAll(".choice");
-    const choiceInput = document.getElementById("choice");
-    const crosswindInput = document.getElementById("crosswind-slider"); // Slider input
-    const submitBtn = document.getElementById("submit-btn");
-    const crosswindValueDisplay = document.getElementById("crosswind-value"); // Display element for the slider value
-
-    // Handle choice button selection
-    choiceButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            choiceInput.value = button.dataset.choice;
-            choiceButtons.forEach(btn => btn.classList.remove("selected"));
-            button.classList.add("selected");
-            checkInputs();
-        });
-    });
-
-    // Update crosswind value display on slider input
-    crosswindInput.addEventListener("input", () => {
-        updateCrosswindValue(crosswindInput.value); // Update the displayed value dynamically
-        checkInputs(); // Check inputs to enable/disable Submit button
-    });
-
-    // Function to enable/disable the Submit button
-    function checkInputs() {
-        if (choiceInput.value && crosswindInput.value) {
-            submitBtn.disabled = false;
-        } else {
-            submitBtn.disabled = true;
-        }
+{% block styles %}
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
-
-    // Function to update the crosswind value display in #.# format
-    function updateCrosswindValue(value) {
-        const formattedValue = parseFloat(value).toFixed(1); // Format to one decimal place
-        crosswindValueDisplay.textContent = formattedValue; // Update the displayed value
+    .result {
+        font-size: 20px;
+        margin-top: 20px;
+        font-weight: bold;
     }
+</style>
+{% endblock %}
 
-    function updateSliderStyle(slider) {
-        const value = parseFloat(slider.value); // Get the slider value
-        const max = parseFloat(slider.max); // Get the slider max value
-        const percentage = (value / max) * 100; // Calculate percentage position
-
-        // Generate gradient color based on the value
-        const color = generateGradientColor(value, max);
-
-        // Update the slider's background gradient
-        slider.style.background = `linear-gradient(90deg, ${color} ${percentage}%, gray ${percentage}%)`;
-
-        // Update the displayed value
-        const crosswindValueDisplay = document.getElementById("crosswind-value");
-        crosswindValueDisplay.textContent = value.toFixed(1); // Display value in #.# format
-    }
-
-    function generateGradientColor(value, max) {
-        const ratio = value / max; // Normalize value between 0 and 1
-
-        // Determine RGB components for the gradient
-        let r = 0, g = 0, b = 0;
-
-        if (ratio <= 0.5) {
-            // Green to Yellow (0-50%)
-            r = Math.round(255 * (ratio / 0.5)); // Increase red
-            g = 255; // Full green
-        } else {
-            // Yellow to Red (50-100%)
-            r = 255; // Full red
-            g = Math.round(255 * ((1 - ratio) / 0.5)); // Decrease green
-        }
-
-        return `rgb(${r}, ${g}, ${b})`; // Return the calculated RGB color
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-    const slider = document.getElementById("crosswind-slider");
-    updateSliderStyle(slider); // Initialize the slider gradient and value display
-    });
-
-</script>
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/crosswind_game_script.js') }}"></script>
 {% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-top: 50px;">
+    <h1>Welcome to the Game Hub</h1>
+    <p>Select a game to start playing:</p>
+    <a href="{{ url_for('crosswind_game') }}" class="button">Start Crosswind Game</a>
+    <!-- Add more buttons for other games here -->
+</div>
+{% endblock %}
