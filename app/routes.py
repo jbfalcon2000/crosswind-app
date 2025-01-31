@@ -10,18 +10,31 @@ def index():
 def crosswind_game():
     if 'score' not in session:
         session['score'] = {"correct": 0, "attempts": 0}
-    
-    if request.method == "GET" or "next" in request.form:
-        # Generate a new scenario
-        generate_scenario()
-    
-    if "restart" in request.form:
-        # Reset the score
-        session['score']["correct"] = 0
-        session['score']["attempts"] = 0
-        # Generate a new scenario
-        generate_scenario()
 
+
+    def render_new_scenario():
+        wind_direction, wind_speed, runway_direction = generate_scenario()
+        return render_template(
+            "crosswind_game.html",
+            wind_direction=wind_direction,
+            wind_speed=wind_speed,
+            runway_direction=runway_direction,
+            score=session['score'],
+            result=None,
+            feedback=None,
+            user_choice=None,
+            correct_choice=None,
+            user_crosswind=None,
+            allow_next=False,
+        )
+        
+    
+    if request.method == "GET" or "next" in request.form or "restart" in request.form:
+        if "restart" in request.form:
+            # Reset the score
+            session['score'] = {"correct": 0, "attempts": 0}
+        return render_new_scenario()
+    
     if request.method == "POST":
         # Handle form submission
         wind_direction = int(request.form.get("wind_direction"))
@@ -48,17 +61,12 @@ def crosswind_game():
             feedback.append(
                 f"Incorrect crosswind component. The correct value was {correct_crosswind} knots."
             )
-            
-        if not feedback:
-            result = "Correct"
-            session['score']['correct'] += 1
-        session['score']['attempts'] += 1
 
         # Update score if everything is correct
         if not feedback:
             result = "Correct"
             session['score']["correct"] += 1
-        session['score']["attempts"] += 1
+        session['score']['attempts'] += 1
 
         # Render feedback
         return render_template(
@@ -74,3 +82,8 @@ def crosswind_game():
             user_crosswind=user_crosswind,
             allow_next=True,
         )
+
+
+@app.route("/dega_game", methods=["GET", "POST"])
+def dega_game():
+    return render_template("dega_game.html")

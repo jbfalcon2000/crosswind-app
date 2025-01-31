@@ -60,16 +60,4 @@ def generate_scenario():
         if runway_direction not in {wind_direction, (wind_direction + 180) % 360}:
             break  # Valid runway_direction found
 
-    return render_template(
-            "crosswind_game.html",
-            wind_direction=wind_direction,
-            wind_speed=wind_speed,
-            runway_direction=runway_direction,
-            score=session['score'],
-            result=None,
-            feedback=None,
-            user_choice=None,
-            correct_choice=None,
-            user_crosswind=None,
-            allow_next=False,
-        )
+    return wind_direction, wind_speed, runway_direction

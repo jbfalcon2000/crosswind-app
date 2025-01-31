@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crosswind Game</title>
+    <title>{% block title %}Pilot Games{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/slider.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
     <style>
         body {
             margin: 0;
@@ -36,69 +37,12 @@
         .section {
             width: 45%;
         }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #1e1e2f;
-            background-color: #a78bfa;
-            border: none;
-            border-radius: 4px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .button:hover {
-            filter: brightness(0.9); /* Reduces brightness by 10% */
-            transform: scale(1.05); /* Retain the slight zoom effect */
-            transition: filter 0.3s, transform 0.2s; /* Smooth transition for the hover effect */
-
-        }
-
-        .button-restart-fixed {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 4px;
-            text-align: center;
-            cursor: pointer;
-            position: fixed; /* Fixed positioning */
-            bottom: 20px;    /* 20px from the bottom of the screen */
-            right: 20px;     /* 20px from the right edge of the screen */
-            z-index: 1000;   /* Ensure it appears above other elements */
-        }
-        .button-restart-fixed:hover {
-            filter: brightness(0.9); /* Reduces brightness by 10% */
-            transform: scale(1.05); /* Retain the slight zoom effect */
-            transition: filter 0.3s, transform 0.2s; /* Smooth transition for the hover effect */
-
-        }
-
-        .button.selected {
-            background-color: #644b85; /* Green color for selection */
-            color: white;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
-        }
-
-        .button.correct {
-        background-color: #10b981; /* Green for correct */
-        color: white;
-        }
-
-        .button.incorrect {
-            background-color: #f87171; /* Red for incorrect */
-            color: white;
-        }
-
     </style>
 </head>
 <body>
 
     {% block content %}{% endblock %}
+    {% block scripts%}{% endblock %}
 
 
 </body>
