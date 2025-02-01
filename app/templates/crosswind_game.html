@@ -5,6 +5,9 @@
 {% block content %}
 <div class="container" style="display: flex; flex-direction: column; align-items: center; padding: 10px; width: 100%;">
 
+<! -- Return to Home Button -->
+    <a href="{{ url_for('index') }}" class="button button-home">Home</a>
+
     <!-- Score -->
     <div class="score">
         Score: {{ score.correct }}/{{ score.attempts }}
@@ -69,9 +72,9 @@
     <!-- Form ends here -->
 
     <!-- Restart Button -->
-    <div style="position: fixed; bottom: 20px; right: 20px;">
+    <div style="position: fixed; bottom: 10px; right: 10px;">
         <form method="POST">
-            <button type="submit" name="restart" class="button-restart-fixed">Restart Game</button>
+            <button type="submit" name="restart" class="button-restart-fixed">Restart</button>
         </form>
     </div>
 
