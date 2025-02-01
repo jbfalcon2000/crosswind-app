@@ -67,6 +67,7 @@ def crosswind_game():
             result = "Correct"
             session['score']["correct"] += 1
         session['score']['attempts'] += 1
+        session.modified = True
 
         # Render feedback
         return render_template(
