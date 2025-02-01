@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
     const choiceButtons = document.querySelectorAll(".choice");
     const choiceInput = document.getElementById("choice");
-    const crosswindInput = document.getElementById("crosswind-slider");
+    const crosswindInput = document.getElementById("crosswind-slider"); // Slider input
     const submitBtn = document.getElementById("submit-btn");
-    const crosswindValueDisplay = document.getElementById("crosswind-value");
+    const crosswindValueDisplay = document.getElementById("crosswind-value"); // Display element for the slider value
 
     // Handle choice button selection
     choiceButtons.forEach(button => {
         button.addEventListener("click", () => {
-            choiceInput.value = button.dataset.choice; // Update the hidden input with the user's choice
+            choiceInput.value = button.dataset.choice;
             choiceButtons.forEach(btn => btn.classList.remove("selected"));
             button.classList.add("selected");
             checkInputs();
@@ -22,21 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
         checkInputs(); // Check inputs to enable/disable Submit button
     });
 
-    // Add touch event listeners for better touch screen support
-    crosswindInput.addEventListener("touchstart", handleTouch);
-    crosswindInput.addEventListener("touchmove", handleTouch);
-    crosswindInput.addEventListener("touchend", handleTouch);
-
-    // Initialize the slider gradient and value display
-    updateSliderStyle(crosswindInput); // Initialize the slider gradient and value display
-});
-
     // Function to enable/disable the Submit button
     function checkInputs() {
-        const choiceInput = document.getElementById("choice");
-        const crosswindInput = document.getElementById("crosswind-slider");
-        const submitBtn = document.getElementById("submit-btn");
-
         if (choiceInput.value && crosswindInput.value) {
             submitBtn.disabled = false;
         } else {
@@ -47,11 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to update the crosswind value display in #.# format
     function updateCrosswindValue(value) {
         const formattedValue = parseFloat(value).toFixed(1); // Format to one decimal place
-        const crosswindValueDisplay = document.getElementById("crosswind-value");
         crosswindValueDisplay.textContent = formattedValue; // Update the displayed value
     }
 
-    // Function to update the slider's gradient color
     function updateSliderStyle(slider) {
         const value = parseFloat(slider.value); // Get the slider value
         const max = parseFloat(slider.max); // Get the slider max value
@@ -68,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
         crosswindValueDisplay.textContent = value.toFixed(1); // Display value in #.# format
     }
 
-    // Function to generate gradient color based on the slider value
     function generateGradientColor(value, max) {
         const ratio = value / max; // Normalize value between 0 and 1
 
@@ -88,7 +72,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return `rgb(${r}, ${g}, ${b})`; // Return the calculated RGB color
     }
 
-    // Function to handle touch events for the slider
+    // Add touch event listeners for better touch screen support
+    crosswindInput.addEventListener("touchstart", handleTouch);
+    crosswindInput.addEventListener("touchmove", handleTouch);
+    crosswindInput.addEventListener("touchend", handleTouch);
+
     function handleTouch(event) {
         event.preventDefault(); // Prevent scrolling
         const touch = event.touches[0];
@@ -99,3 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCrosswindValue(crosswindInput.value);
         checkInputs();
     }
+
+    // Initialize the slider gradient and value display
+    updateSliderStyle(crosswindInput); // Initialize the slider gradient and value display
+});
